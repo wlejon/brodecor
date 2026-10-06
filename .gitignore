@@ -1,0 +1,14 @@
+build*/
+out/
+.cache/
+compile_commands.json
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.gcno
+*.gcda
+*.gcov
+.DS_Store
+*~
