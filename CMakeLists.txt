@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.24)
 project(brodecor VERSION 0.1.0 LANGUAGES CXX)
 
+if(MSVC)
+    # The DLL CRT, so the tests share one heap with bronze_runtime_shared.
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
