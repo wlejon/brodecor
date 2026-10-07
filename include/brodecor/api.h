@@ -1,0 +1,4 @@
+#ifndef BRODECOR_API_H
+#define BRODECOR_API_H
+#include "../../src/api/api.h"
+#endif
