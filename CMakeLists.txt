@@ -31,48 +31,23 @@ if(MSVC)
     add_compile_options(/MP /permissive- /utf-8)
 endif()
 
-# bromath dependency (standalone checkout at ../bromath or specified BROMATH_DIR)
-if(NOT TARGET bromath)
-    if(DEFINED BROMATH_DIR AND EXISTS "${BROMATH_DIR}/CMakeLists.txt")
-        # explicit BROMATH_DIR supplied
-    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../bromath/CMakeLists.txt")
-        set(BROMATH_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../bromath" CACHE PATH "Path to standalone bromath repo")
-    elseif(EXISTS "${CMAKE_SOURCE_DIR}/../bromath/CMakeLists.txt")
-        set(BROMATH_DIR "${CMAKE_SOURCE_DIR}/../bromath" CACHE PATH "Path to standalone bromath repo")
-    endif()
+# Dependencies (cmake/bro_deps.cmake): an outer project's target wins (under bro
+# these are all bro's), else the ../<name> working tree beside the top-level
+# project, else the pinned commit, fetched at configure.
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/bro_deps.cmake)
 
-    if(NOT BROMATH_DIR OR NOT EXISTS "${BROMATH_DIR}/CMakeLists.txt")
-        message(FATAL_ERROR "brodecor: bromath not found at ${BROMATH_DIR}. Please check it out at ../bromath or pass -DBROMATH_DIR=<path>")
-    endif()
-
-    message(STATUS "brodecor: bromath from ${BROMATH_DIR}")
-    add_subdirectory("${BROMATH_DIR}" "${CMAKE_BINARY_DIR}/bromath" EXCLUDE_FROM_ALL)
-endif()
+# bromath, header-only math.
+bro_dependency(bromath GITHUB wlejon/bromath REF 8b511fbd69c014bf0584d2b42e6c96a8cf720f6a)
 
 add_subdirectory(src)
 
 # --- Standalone Bronze JavaScript API ---
 option(BRODECOR_ENABLE_API "Build Bronze JavaScript API" ${_bd_top_level})
 if(BRODECOR_ENABLE_API)
-    if(NOT TARGET bronze_runtime_shared)
-        set(BRONZE_BUILD_SHARED_RUNTIME ON CACHE BOOL "" FORCE)
-        set(BRONZE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-        if(DEFINED BRONZE_DIR AND EXISTS "${BRONZE_DIR}/CMakeLists.txt")
-            # Explicit BRONZE_DIR supplied
-        elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../bronze/CMakeLists.txt")
-            set(BRONZE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../bronze" CACHE PATH "bronze source tree")
-        elseif(EXISTS "${CMAKE_SOURCE_DIR}/../bronze/CMakeLists.txt")
-            set(BRONZE_DIR "${CMAKE_SOURCE_DIR}/../bronze" CACHE PATH "bronze source tree")
-        endif()
-
-        if(NOT BRONZE_DIR OR NOT EXISTS "${BRONZE_DIR}/CMakeLists.txt")
-            message(FATAL_ERROR
-                "bronze not found: check it out beside this repository (../bronze, with ../brass beside it) "
-                "or pass -DBRONZE_DIR=<path>.")
-        endif()
-
-        add_subdirectory("${BRONZE_DIR}" "${CMAKE_BINARY_DIR}/bronze-build" EXCLUDE_FROM_ALL)
-    endif()
+    # bronze, the JavaScript runtime the api binds (it brings its code
+    # generator, brass).
+    bro_dependency(bronze GITHUB wlejon/bronze REF 15ce4cf5fc25d8afe03882985ae95adcba46a6a9 TARGET bronze_runtime_shared
+                   OPTIONS BRONZE_BUILD_SHARED_RUNTIME=ON BRONZE_BUILD_TESTS=OFF)
 
     add_subdirectory(src/api)
 endif()

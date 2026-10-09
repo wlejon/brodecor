@@ -37,8 +37,14 @@ Standalone, reusable C++20 window frame, titlebar, button, drop-shadow, and resi
 
 ## Dependencies
 
-- **`bromath`**: Vector (`Vec2`), color (`Color`, `Color8`), and bounding box math from `/home/j/projects/bromath`.
+- **[`bromath`](https://github.com/wlejon/bromath)**: Vector (`Vec2`), color (`Color`, `Color8`), and bounding box math.
+- **[bronze](https://github.com/wlejon/bronze)** (with brass, its code generator) for the JavaScript binding.
 - No external third-party dependencies.
+
+A plain `git clone` is enough: there are no submodules. Each dependency is a `bro_dependency()`
+pin in `CMakeLists.txt` (`cmake/bro_deps.cmake`): an existing target wins, then a working tree at
+`../<name>`, then the pinned commit, fetched at configure. Override one with
+`-DFETCHCONTENT_SOURCE_DIR_<NAME>=<path>`.
 
 ## Building and Testing
 
