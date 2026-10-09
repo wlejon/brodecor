@@ -12,7 +12,7 @@ concurrency:
 
 # brodecor builds on bromath, and its JavaScript binding (brodecor_api) binds
 # bronze (with brass). Every job builds a plain clone: those come from the
-# commits CMakeLists.txt pins (cmake/bro_deps.cmake), fetched at configure.
+# heads of their main branches (cmake/bro_deps.cmake), fetched at configure.
 jobs:
   test:
     name: ${{ matrix.name }}

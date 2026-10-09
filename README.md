@@ -42,8 +42,8 @@ Standalone, reusable C++20 window frame, titlebar, button, drop-shadow, and resi
 - No external third-party dependencies.
 
 A plain `git clone` is enough: there are no submodules. Each dependency is a `bro_dependency()`
-pin in `CMakeLists.txt` (`cmake/bro_deps.cmake`): an existing target wins, then a working tree at
-`../<name>`, then the pinned commit, fetched at configure. Override one with
+call in `CMakeLists.txt` (`cmake/bro_deps.cmake`): an existing target wins, then a working tree at
+`../<name>`, then the head of its main branch, fetched at configure. Override one with
 `-DFETCHCONTENT_SOURCE_DIR_<NAME>=<path>`.
 
 ## Building and Testing
