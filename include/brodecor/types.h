@@ -137,7 +137,8 @@ enum class ButtonKind : uint8_t {
     Minimize,
     Maximize,
     Restore,
-    Menu
+    Menu,
+    Custom
 };
 
 inline const char* to_string(ButtonKind kind) noexcept {
@@ -147,6 +148,7 @@ inline const char* to_string(ButtonKind kind) noexcept {
         case ButtonKind::Maximize: return "Maximize";
         case ButtonKind::Restore: return "Restore";
         case ButtonKind::Menu: return "Menu";
+        case ButtonKind::Custom: return "Custom";
     }
     return "Unknown";
 }
@@ -297,6 +299,14 @@ constexpr bool is_fullscreen(FrameState s) noexcept {
 
 constexpr bool is_tiled(FrameState s) noexcept {
     return has_state(s, FrameState::Tiled);
+}
+
+inline const char* to_string(FrameState state) noexcept {
+    if (is_fullscreen(state)) return "fullscreen";
+    if (is_maximized(state)) return "maximized";
+    if (is_tiled(state)) return "tiled";
+    if (is_inactive(state)) return "inactive";
+    return "active";
 }
 
 // --- Window Caption ---
